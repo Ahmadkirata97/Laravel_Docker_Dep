@@ -1,0 +1,38 @@
+  services:
+    web:
+      build:
+        context: .
+        dockerfile: ./nginx/web.dockerfile
+      depends_on:
+        - app
+      ports:
+        - "8080:80"
+      networks:
+        - laravel_deployment
+    db:
+      build:
+        context: .
+        dockerfile: ./nginx/db.dockerfile
+      ports:
+        - "3306:3306"
+      networks:
+        - laravel_deployment
+      environment:
+        MYSQL_DATABASE: laragigs
+        MYSQL_ROOT_PASSWORD: password
+    app:
+      build:
+        context: .
+        dockerfile: ./nginx/app.dockerfile
+      depends_on:
+        - db 
+      networks:
+        - laravel_deployment
+      ports:
+        - "9000:9000"
+
+
+
+  networks:
+    laravel_deployment:
+      driver: bridge
